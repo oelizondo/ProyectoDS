@@ -71,6 +71,8 @@ const writeToFile = (data) => {
   })
 }
 
+
+/* MAIN */
 URLS.map((url) => {
   get(url).then(getTable)
           .then(extractData)
