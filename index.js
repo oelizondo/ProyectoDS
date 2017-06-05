@@ -9,12 +9,12 @@ const get = (url) => {
   return new Promise((resolve, reject) => {
     request(url, (error, response, html) => {
       if (error) reject(error)
-      resolve(html)
+      resolve([html, url])
     })
   })
 }
 
-const filterTableRows = (table) => {
+const filterTableRows = (table, url) => {
   return new Promise((resolve, reject) => {
     let row = null
     let values = []
@@ -24,21 +24,26 @@ const filterTableRows = (table) => {
         continue
       values.push(row.children[0]['data'])
     }
+    values.push(url.substr(32,7))
     resolve(values)
     reject('Error')
   })
 }
 
-const getTable = (html) => {
+const getTable = (response) => {
+  const html = response[0]
+  const url  = response[1]
   return new Promise((resolve, reject) => {
     const $ = cheerio.load(html)
     let table = $('table').children()
-    resolve(table['3'])
+    resolve([table['3'], url])
     reject('Error')
   })
 }
 
-const extractData = (table) => {
+const extractData = (response) => {
+  const table = response[0]
+  const url   = response[1]
   return new Promise((resolve, reject) => {
     let csv = []
     if (typeof table === 'undefined')
@@ -47,7 +52,7 @@ const extractData = (table) => {
     table.children.map(async (tr, index) => {
       let cleanedRow = null
       if (index != 0 && (index != 32 || index != 33)) {
-        cleanedRow = await filterTableRows(tr)
+        cleanedRow = await filterTableRows(tr, url)
         csv.push(cleanedRow)
       }
     })
@@ -60,7 +65,7 @@ const spliceDataset = (data) => {
   return new Promise((resolve, reject) => {
     let flatData = []
     data.map((row) => row.map((data) =>  flatData.push(data)))
-    for (let i = 10; i < flatData.length; i+=10)
+    for (let i = 11; i < flatData.length; i+=11)
       flatData.splice(i, 1, '\n')
 
     resolve(flatData)

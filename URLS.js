@@ -17,4 +17,7 @@ for (let i = 0; i <= 17; i++) {
   }
 }
 
+// ['https://en.tutiempo.net/climate/01-2017/ws-763930.html']
+
 module.exports = URLS
+
