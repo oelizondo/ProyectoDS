@@ -3,6 +3,7 @@ const cheerio = require('cheerio')
 const fs      = require('fs')
 
 const URLS = require('./URLS')
+const format = require('./formatter')
 
 const get = (url) => {
   return new Promise((resolve, reject) => {
@@ -40,6 +41,9 @@ const getTable = (html) => {
 const extractData = (table) => {
   return new Promise((resolve, reject) => {
     let csv = []
+    if (typeof table === 'undefined')
+      reject('Hung up')
+
     table.children.map(async (tr, index) => {
       let cleanedRow = null
       if (index != 0 && (index != 32 || index != 33)) {
@@ -78,5 +82,6 @@ URLS.map((url) => {
           .then(extractData)
           .then(spliceDataset)
           .then(writeToFile)
+          .then(format)
           .catch((error) => console.log(error))
 })
