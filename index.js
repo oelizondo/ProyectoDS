@@ -60,7 +60,7 @@ const spliceDataset = (data) => {
   return new Promise((resolve, reject) => {
     let flatData = []
     data.map((row) => row.map((data) =>  flatData.push(data)))
-    for (let i = 9; i < flatData.length; i+=10)
+    for (let i = 10; i < flatData.length; i+=10)
       flatData.splice(i, 1, '\n')
 
     resolve(flatData)
@@ -82,6 +82,5 @@ URLS.map((url) => {
           .then(extractData)
           .then(spliceDataset)
           .then(writeToFile)
-          .then(format)
           .catch((error) => console.log(error))
 })

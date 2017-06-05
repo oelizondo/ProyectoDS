@@ -37,9 +37,7 @@ const writeToFile = (polishedData) => {
   fs.writeFileSync('cleanData.csv', polishedData.join('\n'))
 }
 
-module.exports = function () {
-  parseBuffer().then(removeCommas)
-               .then(removeUselessData)
-               .then(writeToFile)
-               .catch((error) => console.log(error))
-}
+parseBuffer().then(removeCommas)
+             .then(removeUselessData)
+             .then(writeToFile)
+             .catch((error) => console.log(error))
