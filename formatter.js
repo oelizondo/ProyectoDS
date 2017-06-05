@@ -8,18 +8,7 @@ const parseBuffer = () => {
   })
 }
 
-const removeCommas = (stringedData) => {
-  return new Promise((resolve, reject) => {
-    const formattedData = stringedData.map((row) => {
-      row.replace(/,,/, '')
-      return row[0] == ',' ? row.slice(1, row.length) : row
-    })
-    resolve(formattedData)
-    reject('Error')
-  })
-}
-
-const removeUselessData = (rawData) => {
+const removeEmptyRows = (rawData) => {
   return new Promise((resolve, reject) => {
     const polishedData = rawData.filter((row) => {
       let hyphens = 0
@@ -37,7 +26,8 @@ const writeToFile = (polishedData) => {
   fs.writeFileSync('cleanData.csv', polishedData.join('\n'))
 }
 
-parseBuffer().then(removeCommas)
-             .then(removeUselessData)
-             .then(writeToFile)
-             .catch((error) => console.log(error))
+module.exports = function () {
+  parseBuffer().then(removeEmptyRows)
+               .then(writeToFile)
+               .catch((error) => console.log(error))
+}
