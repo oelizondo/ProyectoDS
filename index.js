@@ -8,7 +8,7 @@ const format = require('./formatter')
 const get = (url) => {
   return new Promise((resolve, reject) => {
     request(url, (error, response, html) => {
-      if (error) reject(error)
+      if (error) reject(url)
       resolve([html, url])
     })
   })
@@ -41,11 +41,12 @@ const getTable = (response) => {
 }
 
 const extractData = (response) => {
-  const [html, url] = response
+  const [table, url] = response
   return new Promise((resolve, reject) => {
     let csv = []
     if (typeof table === 'undefined')
-      reject('Hung up')
+      reject()
+
     table.children.shift()
     table.children.pop()
     table.children.pop()
@@ -71,7 +72,6 @@ const spliceDataset = (data) => {
     reject('Error')
   })
 }
-
 
 /* MAIN */
 URLS.map((url) => {

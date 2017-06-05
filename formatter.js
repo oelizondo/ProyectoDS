@@ -27,7 +27,11 @@ const writeToFile = (polishedData) => {
 }
 
 module.exports = function () {
-  parseBuffer().then(removeEmptyRows)
-               .then(writeToFile)
-               .catch((error) => console.log(error))
+  return new Promise((resolve, reject) => {
+    parseBuffer().then(removeEmptyRows)
+                 .then(writeToFile)
+                 .catch((error) => console.log(error))
+    resolve()
+    reject()
+  })
 }
